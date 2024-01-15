@@ -41,12 +41,23 @@ def format_date(date):
     return parsed_date.strftime("%Y-%m-%d")
 
 
-def main():
-    url = url_gen(1)
-    soup = parse(url)
+# Credit to: https://stackoverflow.com/a/952952
+def flatten(list):
+    flat_list = [item for sublist in list for item in sublist]
+    return flat_list
 
-    data = grab_data(soup)
-    print(data)
+
+def main():
+    main_data_list = []
+    for page_number in range(1, 10):
+        url = url_gen(page_number)
+        soup = parse(url)
+        data = grab_data(soup)
+        main_data_list.append(data)
+
+    main_data_list = flatten(main_data_list)
+    print(main_data_list)
+        
 
 
 if __name__ == "__main__":
