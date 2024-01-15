@@ -24,16 +24,39 @@ def parse(url):
 
 
 def grab_data(soup):
-    elements = soup.find_all("div", attrs={"data-service-review-rating": True})
-    review_data = []
-    for element in elements:
-        data = {
-            "review": element["data-service-review-rating"],
-            "date": format_date(element.find("time")["datetime"]),
-        }
-        review_data.append(data)
+    try:
+        if soup is None:
+            raise ValueError("Error.")
 
-    return review_data
+        elements = soup.find_all("div", attrs={"data-service-review-rating": True})
+        review_data = []
+        for element in elements:
+            try:
+                review = element["data-service-review-rating"]
+            except KeyError:
+                review = "No rating"
+
+            try:
+                date_element = element.find("time")
+                date = (
+                    format_date(date_element["datetime"])
+                    if date_element
+                    else "Unknown date"
+                )
+            except (AttributeError, KeyError):
+                date = "Unknown date"
+
+            data = {
+                "review": review,
+                "date": date,
+            }
+            review_data.append(data)
+
+        return review_data
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
 
 
 def format_date(date):
