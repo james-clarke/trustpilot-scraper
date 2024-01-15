@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
+import csv
 
 
 def url_gen(page_number):
@@ -47,17 +48,25 @@ def flatten(list):
     return flat_list
 
 
+def write_to_csv(filename, data):
+    with open(filename, "w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=["review", "date"])
+        writer.writeheader()
+        for row in data:
+            writer.writerow(row)
+
+
 def main():
     main_data_list = []
-    for page_number in range(1, 10):
+    for page_number in range(1, 323):
         url = url_gen(page_number)
         soup = parse(url)
         data = grab_data(soup)
         main_data_list.append(data)
 
     main_data_list = flatten(main_data_list)
-    print(main_data_list)
-        
+
+    write_to_csv("data.csv", main_data_list)
 
 
 if __name__ == "__main__":
