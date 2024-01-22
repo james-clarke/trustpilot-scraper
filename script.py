@@ -1,15 +1,19 @@
+# libs for scraping and sorting data
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
 import csv
 
 
+# func for iterating url page numbers
 def url_gen(page_number):
     url = f"https://uk.trustpilot.com/review/dreamcargiveaways.co.uk?page={page_number}"
     return url
 
 
+# standard bs4 parsing
 def parse(url):
+    # user sepcific agent
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2.1 Safari/605.1.15"
     }
@@ -23,6 +27,7 @@ def parse(url):
     return None
 
 
+#  grab ALL needed data from selectors
 def grab_data(soup):
     try:
         if soup is None:
@@ -59,6 +64,7 @@ def grab_data(soup):
         return []
 
 
+# works with dates to format correctly, removes time zone changes
 def format_date(date):
     date = date.replace("Z", "")
     parsed_date = datetime.fromisoformat(date)
@@ -71,6 +77,7 @@ def flatten(list):
     return flat_list
 
 
+# simple csv output
 def write_to_csv(filename, data):
     with open(filename, "w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=["review", "date"])
