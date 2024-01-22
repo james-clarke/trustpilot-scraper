@@ -1,4 +1,5 @@
 # libs for scraping and sorting data
+# onwership: JAMES CLARKE
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
@@ -19,6 +20,7 @@ def parse(url):
     }
     resp = requests.get(url, headers=headers)
 
+    # error check for request status
     if resp.status_code == 200:
         html = resp.content
         soup = BeautifulSoup(html, "lxml")
